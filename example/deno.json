@@ -1,0 +1,17 @@
+{
+  "tasks": {
+    "dev": "deno run -A ../esbuild/mod.ts --watch --serve --in src/main.ts",
+    "build": "deno run -A ../esbuild/mod.ts"
+  },
+  "imports": {
+    "@char/aftercare": "../mod.ts",
+    "@char/aftercare/elem": "../elem.ts",
+    "@char/aftercare/jsx-runtime": "../jsx.ts",
+    "@char/aftercare/pipe": "../pipe.ts"
+  },
+  "compilerOptions": {
+    "lib": ["deno.window", "dom"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "@char/aftercare"
+  }
+}

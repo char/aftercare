@@ -27,6 +27,8 @@ export async function build(opts: BuildOptions) {
     entryPoints: opts.in,
     outdir: opts.outDir,
     legalComments: "none",
+    jsx: "automatic",
+    jsxImportSource: "@char/aftercare",
     ...(opts.extraOptions ?? {}),
   } satisfies esbuild.BuildOptions;
 
