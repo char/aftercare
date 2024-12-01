@@ -4,10 +4,10 @@
     "build": "deno run -A ../esbuild/mod.ts"
   },
   "imports": {
-    "@char/aftercare": "../mod.ts",
-    "@char/aftercare/elem": "../elem.ts",
-    "@char/aftercare/jsx-runtime": "../jsx.ts",
-    "@char/aftercare/pipe": "../pipe.ts"
+    // usually you should be able to just have one import entry for @char/aftercare from jsr
+    "@char/aftercare": "../src/mod.ts",
+    "@char/aftercare/elem": "../src/elem.ts",
+    "@char/aftercare/jsx-runtime": "../src/jsx.ts"
   },
   "compilerOptions": {
     "lib": ["deno.window", "dom"],

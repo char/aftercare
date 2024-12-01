@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "license": "WTFPL",
   "exports": {
-    ".": "./mod.ts",
-    "./elem": "./elem.ts",
-    "./esbuild": "./esbuild/mod.ts",
-    "./jsx-runtime": "./jsx.ts"
+    ".": "./src/mod.ts",
+    "./elem": "./src/elem.ts",
+    "./esbuild": "./src/esbuild/mod.ts",
+    "./jsx-runtime": "./src/jsx.ts"
   },
   "compilerOptions": {
     "lib": ["deno.window", "dom"],
