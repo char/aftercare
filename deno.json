@@ -12,5 +12,8 @@
     "lib": ["deno.window", "dom"],
     "jsx": "react-jsx",
     "jsxImportSource": "@char/aftercare"
+  },
+  "publish": {
+    "exclude": ["example/"]
   }
 }

@@ -22,7 +22,7 @@ export interface ElementExtras<E extends GenericElement> {
 
 export type TagName = keyof HTMLElementTagNameMap;
 export type CustomTagType<T extends GenericElement = GenericElement> = new () => T;
-export type ElementType<T extends TagName | CustomTagType> = T extends TagName
+export type ElementType<T extends TagName | CustomTagType | undefined> = T extends TagName
   ? HTMLElementTagNameMap[T]
   : T extends CustomTagType<infer E>
     ? E

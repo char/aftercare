@@ -17,17 +17,16 @@ namespace JSX {
   };
 }
 
-function Fragment(props: Record<string, unknown>, _key?: string) {
-  return jsx(undefined, props, _key);
+function Fragment(props: Record<string, unknown>, _key?: string): never {
+  return jsx(undefined, props, _key) as never;
 }
 
 function jsx<T extends TagName | CustomTagType>(
   tag: T | undefined,
   props: Record<string, unknown>,
   _key?: string,
-) {
-  if (typeof tag === "undefined") {
-    // fragment
+): ElementType<T> {
+  if (tag === undefined) {
     throw new Error("fragments are not supported");
   }
 
