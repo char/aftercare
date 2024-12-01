@@ -1,0 +1,16 @@
+{
+  "name": "@char/aftercare",
+  "version": "0.1.0",
+  "license": "WTFPL",
+  "exports": {
+    ".": "./mod.ts",
+    "./elem": "./elem.ts",
+    "./esbuild": "./esbuild/mod.ts",
+    "./jsx-runtime": "./jsx.ts"
+  },
+  "compilerOptions": {
+    "lib": ["deno.window", "dom"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "@char/aftercare"
+  }
+}
