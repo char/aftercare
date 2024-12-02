@@ -1,7 +1,7 @@
 {
   "tasks": {
-    "dev": "deno run -A ../esbuild/mod.ts --watch --serve --in src/main.ts",
-    "build": "deno run -A ../esbuild/mod.ts"
+    "dev": "deno run -A ../src/esbuild/mod.ts --watch --serve --in src/main.tsx",
+    "build": "deno run -A ../src/esbuild/mod.ts --in src/main.tsx"
   },
   "imports": {
     // usually you should be able to just have one import entry for @char/aftercare from jsr

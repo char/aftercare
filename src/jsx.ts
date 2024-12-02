@@ -30,9 +30,9 @@ function jsx<T extends TagName | CustomTagType>(
     throw new Error("fragments are not supported");
   }
 
-  const { children = [], classList, dataset, tap, ...attrs } = props;
+  const { children = [], classList, dataset, _tap, ...attrs } = props;
   const childrenArray = Array.isArray(children) ? children : [children];
-  const extras = { classList, dataset, tap } as ElementExtras<ElementType<T>>;
+  const extras = { classList, dataset, _tap } as ElementExtras<ElementType<T>>;
   return elem(tag, attrs as ElementProps<ElementType<T>>, childrenArray, extras);
 }
 
