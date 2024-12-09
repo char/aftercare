@@ -4,20 +4,15 @@ assertEquals(2, 1 + 1);
 import { Signal } from "@char/aftercare";
 
 const counter = new Signal(0);
-const decrement = () => counter.set(counter.get() - 1);
-const increment = () => counter.set(counter.get() + 1);
+const increment = () => counter.value++;
+const decrement = () => counter.value--;
+const showCounter = (span: HTMLElement) =>
+  counter.subscribeImmediate(v => (span.textContent = v + ""));
 
 document.body.append(
   <div>
     <button _tap={b => b.addEventListener("click", decrement)}>-</button>
-    <span
-      _tap={s =>
-        // set text whenever the counter changes
-        counter.subscribeImmediate(counterValue => {
-          s.innerText = counterValue + "";
-        })
-      }
-    />
+    <span _tap={showCounter} />
     <button _tap={b => b.addEventListener("click", increment)}>+</button>
   </div>,
 );

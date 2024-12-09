@@ -21,8 +21,8 @@ assertEquals(2, 1 + 1);
 import { Signal } from "jsr:@char/aftercare";
 
 const counter = new Signal(0);
-const decrement = () => counter.set(counter.get() - 1);
-const increment = () => counter.set(counter.get() + 1);
+const increment = () => counter.value++;
+const decrement = () => counter.value--;
 const showCounter = (span: HTMLElement) =>
   counter.subscribeImmediate(value => (span.innerText = value + ""));
 
