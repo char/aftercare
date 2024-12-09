@@ -1,16 +1,20 @@
 export type Subscription<T> = (value: T) => unknown | Promise<unknown>;
 
-class SubscribableBase<A, B extends A> {
+class SignalBase<A, B extends A> {
   #listeners: Set<Subscription<B>> = new Set();
 
-  constructor(private value: A) {}
+  #value: A;
+
+  constructor(value: A) {
+    this.#value = value;
+  }
 
   get(): A {
-    return this.value;
+    return this.#value;
   }
 
   set(newValue: B) {
-    this.value = newValue;
+    this.#value = newValue;
     for (const listener of this.#listeners) {
       try {
         void listener(newValue);
@@ -29,15 +33,23 @@ class SubscribableBase<A, B extends A> {
       },
     };
   }
+
+  get value(): A {
+    return this.get();
+  }
+
+  set value(newValue: B) {
+    this.set(newValue);
+  }
 }
 
-export class Subscribable<T> extends SubscribableBase<T, T> {
+export class Signal<T> extends SignalBase<T, T> {
   subscribeImmediate(listener: Subscription<T>): ReturnType<typeof this.subscribe> {
     listener(this.get());
     return this.subscribe(listener);
   }
 }
-export class LateSubscribable<T> extends SubscribableBase<T | undefined, T> {
+export class LazySignal<T> extends SignalBase<T | undefined, T> {
   constructor() {
     super(undefined);
   }

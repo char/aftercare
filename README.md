@@ -5,7 +5,7 @@ makes the dom nicer
 ## features
 
 - deno/esbuild build system
-- reactive subscribable values
+- reactive signals
 - jsx runtime
 
 ## example
@@ -17,10 +17,10 @@ makes the dom nicer
 import { assertEquals } from "jsr:@std/assert";
 assertEquals(2, 1 + 1);
 
-// Subscribable values have reactive behavior (set(..) calls all subscribe(..) listeners)
-import { Subscribable } from "jsr:@char/aftercare";
+// Signals have reactive behavior (set(..) calls all subscribe(..) listeners)
+import { Signal } from "jsr:@char/aftercare";
 
-const counter = new Subscribable(0);
+const counter = new Signal(0);
 const decrement = () => counter.set(counter.get() - 1);
 const increment = () => counter.set(counter.get() + 1);
 const showCounter = (span: HTMLElement) =>
