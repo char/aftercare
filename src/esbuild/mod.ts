@@ -18,6 +18,7 @@ export async function build(opts: BuildOptions) {
   const buildOpts = {
     bundle: true,
     minify: true,
+    splitting: true,
     target: "esnext",
     platform: "browser",
     format: "esm",
