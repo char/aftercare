@@ -6,7 +6,8 @@
     ".": "./src/mod.ts",
     "./elem": "./src/elem.ts",
     "./esbuild": "./src/esbuild/mod.ts",
-    "./jsx-runtime": "./src/jsx.ts"
+    "./jsx-runtime": "./src/jsx.ts",
+    "./router": "./src/router.ts"
   },
   "compilerOptions": {
     "lib": ["deno.window", "dom"],
