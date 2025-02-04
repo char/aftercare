@@ -24,14 +24,24 @@ class SignalBase<A, B extends A> {
     }
   }
 
-  subscribe(listener: Subscription<B>): { unsubscribe: () => void } {
+  subscribe(
+    listener: Subscription<B>,
+    opts: { signal?: AbortSignal } = {},
+  ): { unsubscribe: () => void } {
     const listeners = this.#listeners;
     listeners.add(listener);
-    return {
+
+    const subscription = {
       unsubscribe() {
         listeners.delete(listener);
       },
     };
+
+    if (opts.signal) {
+      opts.signal.addEventListener("abort", () => subscription.unsubscribe());
+    }
+
+    return subscription;
   }
 
   get value(): A {
