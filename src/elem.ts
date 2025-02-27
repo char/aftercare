@@ -1,24 +1,47 @@
 type GenericElement = HTMLElement | SVGElement;
 
-type IsNullish<T> = [T] extends [null] ? true : [T] extends [undefined] ? true : false;
-type IsFunctionIsh<T> =
-  IsNullish<T> extends true
-    ? false
-    : // deno-lint-ignore ban-types
-      T extends Function | null | undefined
-      ? true
-      : false;
+// prettier-ignore
+type IsEqual<A, B> =
+  (<G>() => G extends A ? 1 : 2) extends 
+  (<G>() => G extends B ? 1 : 2) ? 
+  true : false;
+
+// prettier-ignore
+type WritableKeysOf<T> = {
+  [P in keyof T]: IsEqual<
+    { [Q in P]: T[P] },
+    { readonly [Q in P]: T[P] }
+  > extends false ? P : never;
+}[keyof T];
 
 export type ElementProps<E extends GenericElement> = {
-  [K in keyof E as IsFunctionIsh<E[K]> extends true ? never : K]?: E[K];
+  // deno-lint-ignore ban-types
+  [K in WritableKeysOf<E> as NonNullable<E[K]> extends Function ? never : K]?: E[K];
 };
 
 export interface ElementExtras<E extends GenericElement> {
   classList?: string[];
+  style?: {
+    // prettier-ignore
+    [K in WritableKeysOf<CSSStyleDeclaration>
+      as K extends string
+        ? CSSStyleDeclaration[K] extends string ? K : never
+        : never
+    ]?: CSSStyleDeclaration[K];
+  } & {
+    [prop: `--${string}`]: string | undefined;
+  };
   dataset?: Partial<Record<string, string>>;
   /** extra function to run on the element */
   _tap?: (elem: E) => void;
 }
+
+export type ElementEventListeners<E extends GenericElement> = {
+  [K in keyof HTMLElementEventMap as K extends string ? `_on${K}` : never]?: (
+    this: E,
+    ev: HTMLElementEventMap[K],
+  ) => void;
+};
 
 export type TagName = keyof HTMLElementTagNameMap;
 export type CustomTagType<T extends GenericElement = GenericElement> = new () => T;
@@ -32,7 +55,7 @@ export function elem<T extends TagName | CustomTagType>(
   tag: T,
   attrs: ElementProps<ElementType<T>> = {},
   children: (Element | string | Text)[] = [],
-  extras: ElementExtras<ElementType<T>> = {},
+  extras: ElementExtras<ElementType<T>> & ElementEventListeners<ElementType<T>> = {},
 ): ElementType<T> {
   const element = typeof tag === "string" ? document.createElement(tag) : new tag();
 
@@ -53,6 +76,21 @@ export function elem<T extends TagName | CustomTagType>(
   element.append(...childNodes);
 
   if (extras._tap) extras._tap(element as ElementType<T>);
+
+  if (extras.style)
+    Object.entries(extras.style).forEach(([k, v]) =>
+      k.startsWith("--")
+        ? v
+          ? element.style.setProperty(k, v)
+          : element.style.removeProperty(k)
+        : // @ts-expect-error blind assignment
+          (element.style[k] = v),
+    );
+
+  for (const [key, value] of Object.entries(extras)) {
+    if (!key.startsWith("_on")) continue;
+    element.addEventListener(key.substring(3), value.bind(element));
+  }
 
   return element as ElementType<T>;
 }

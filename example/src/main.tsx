@@ -10,9 +10,13 @@ const showCounter = (span: HTMLElement) =>
   counter.subscribeImmediate(v => (span.textContent = v + ""));
 
 document.body.append(
-  <div>
-    <button _tap={b => b.addEventListener("click", decrement)}>-</button>
+  <div style={{ display: "flex", gap: "0.5em" }}>
+    <button type="button" _onclick={decrement}>
+      -
+    </button>
     <span _tap={showCounter} />
-    <button _tap={b => b.addEventListener("click", increment)}>+</button>
+    <button type="button" _onclick={increment}>
+      +
+    </button>
   </div>,
 );

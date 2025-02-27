@@ -28,9 +28,9 @@ const showCounter = (span: HTMLElement) =>
 
 document.body.append(
   <div>
-    <button _tap={b => b.addEventListener("click", decrement)}>-</button>
+    <button _onclick={decrement}>-</button>
     <span _tap={showCounter} />
-    <button _tap={b => b.addEventListener("click", increment)}>+</button>
+    <button _onclick={increment}>+</button>
   </div>,
 );
 ```
