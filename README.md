@@ -18,7 +18,7 @@ import { assertEquals } from "jsr:@std/assert";
 assertEquals(2, 1 + 1);
 
 // Signals have reactive behavior (set(..) calls all subscribe(..) listeners)
-import { Signal } from "jsr:@char/aftercare";
+import { Signal } from "jsr:@char/aftercare@0.3.0";
 
 const counter = new Signal(0);
 const increment = () => counter.value++;
