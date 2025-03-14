@@ -18,9 +18,10 @@ type ElementAttributes<T extends TagName | CustomTagType> = Omit<
 // deno-lint-ignore no-namespace
 namespace JSX {
   export type Element = HTMLElement | SVGElement;
+  export type Child = JSX.Element | Element | string | Text;
   export type IntrinsicElements = {
     [K in TagName]: Omit<ElementAttributes<K>, "children"> & {
-      children?: JSX.Element | JSX.Element[] | undefined;
+      children?: JSX.Child | JSX.Child[] | undefined;
     };
   };
 }
