@@ -20,7 +20,7 @@ export type ElementProps<E extends GenericElement> = {
 };
 
 export interface ElementExtras<E extends GenericElement> {
-  classList?: string[];
+  classList?: (string | undefined)[];
   style?: {
     // prettier-ignore
     [K in WritableKeysOf<CSSStyleDeclaration>
@@ -64,7 +64,7 @@ export function elem<T extends TagName | CustomTagType>(
     Object.fromEntries(Object.entries(attrs).filter(([_k, v]) => v !== undefined)),
   );
 
-  if (extras.classList) extras.classList.forEach(c => element.classList.add(c));
+  if (extras.classList) extras.classList.forEach(c => c && element.classList.add(c));
   if (extras.dataset && (element instanceof HTMLElement || element instanceof SVGElement))
     Object.entries(extras.dataset)
       .filter(([_k, v]) => v !== undefined)
