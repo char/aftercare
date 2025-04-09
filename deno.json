@@ -13,6 +13,6 @@
     "jsxImportSource": "@char/aftercare"
   },
   "publish": {
-    "exclude": ["example/"]
+    "exclude": ["example/", ".editorconfig", ".prettierrc"]
   }
 }
