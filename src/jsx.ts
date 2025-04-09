@@ -1,5 +1,4 @@
 import {
-  type CustomTagType,
   elem,
   type ElementEventListeners,
   type ElementExtras,
@@ -8,7 +7,7 @@ import {
   type TagName,
 } from "./elem.ts";
 
-type ElementAttributes<T extends TagName | CustomTagType> = Omit<
+type ElementAttributes<T extends TagName> = Omit<
   ElementProps<ElementType<T>>,
   keyof ElementExtras<ElementType<T>>
 > &
@@ -30,11 +29,14 @@ function Fragment(_props: Record<string, unknown>, _key?: string): never {
   throw new Error("fragments are not supported!");
 }
 
-function jsx<T extends TagName | CustomTagType>(
-  tag: T,
+function jsx<T extends TagName>(
+  tag: T | ((props: Record<string, unknown>) => JSX.Element),
   props: Record<string, unknown>,
   _key?: string,
 ): ElementType<T> {
+  // function components
+  if (typeof tag === "function") return tag(props) as ElementType<T>;
+
   const { children = [], classList, dataset, style, _tap, ...attrs } = props;
   const childrenArray = Array.isArray(children) ? children : [children];
   const extras = { classList, dataset, style, _tap } as ElementExtras<ElementType<T>> &
