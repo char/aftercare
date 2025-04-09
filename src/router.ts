@@ -1,7 +1,7 @@
 import { LazySignal } from "./signal.ts";
 
 export abstract class Router<Route extends object> {
-  route = new LazySignal<Route>();
+  readonly route: LazySignal<Route> = new LazySignal();
 
   abstract parseRoute(path: string): Route;
   abstract getPathForRoute(route: Route): string;
