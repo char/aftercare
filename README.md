@@ -2,11 +2,15 @@
 
 makes the dom nicer
 
+a microframework for client-side frontend development
+
 ## features
 
 - deno/esbuild build system
 - reactive signals
+- strongly-typed element creation helpers
 - jsx runtime
+- monadic result wrapper for functions that throw
 
 ## example
 
