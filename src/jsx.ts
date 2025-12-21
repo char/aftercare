@@ -14,10 +14,12 @@ type ElementAttributes<T extends TagName> = Omit<
   ElementExtras<ElementType<T>> &
   ElementEventListeners<ElementType<T>>;
 
+type DOMElement = Element; // Element gets shadowed in the JSX namespace later:
+
 // deno-lint-ignore no-namespace
 namespace JSX {
   export type Element = HTMLElement | SVGElement;
-  export type Child = JSX.Element | Element | string | Text;
+  export type Child = JSX.Element | DOMElement | DOMElement[] | string | Text;
   export type IntrinsicElements = {
     [K in TagName]: Omit<ElementAttributes<K>, "children"> & {
       children?: JSX.Child | JSX.Child[] | undefined;
