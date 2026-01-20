@@ -91,6 +91,7 @@ export type GenericElementMap = HTMLElementTagNameMap & DisjointSVGElementMap;
  */
 export type TagName = keyof GenericElementMap;
 
+/** T can be a {@link TagName} or the name of an unknown custom element. */
 export type ElementType<T extends TagName | `${string}-${string}`> =
   T extends keyof GenericElementMap ? GenericElementMap[T] : GenericElement;
 

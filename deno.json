@@ -1,6 +1,6 @@
 {
   "name": "@char/aftercare",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "license": "WTFPL",
   "tasks": {
     "build-example": "deno run -A ./lib/bundle.ts -i ./example/main.tsx -o ./example/dist"

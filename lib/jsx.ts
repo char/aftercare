@@ -15,12 +15,20 @@ import type { SignalLike } from "./signal.ts";
 
 type DOMElement = Element; // Element is shadowed in the JSX namespace later
 
+/**
+ * JSX namespace as required by `react-jsx` strategy
+ *
+ * @see {@link jsx}
+ */
 // deno-lint-ignore no-namespace
 namespace JSX {
+  /** @see {@link jsx} */
   export type Element = GenericElement;
 
+  /** @see {@link jsx} */
   export type Child = Node | string | SignalLike<string>;
   type ContainsChildren = { children?: JSX.Child | JSX.Child[] };
+  /** @see {@link jsx} */
   export type IntrinsicElements = {
     [K in keyof GenericElementMap]: ElementProps<GenericElementMap[K]> & ContainsChildren;
   } & { [K: `${string}-${string}`]: ElementProps<GenericElement> & ContainsChildren };
