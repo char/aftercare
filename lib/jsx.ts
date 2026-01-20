@@ -27,7 +27,7 @@ namespace JSX {
 
   /** @see {@link jsx} */
   export type Child = Node | Node[] | string | SignalLike<string>;
-  type ContainsChildren = { children?: JSX.Child };
+  type ContainsChildren = { children?: JSX.Child | JSX.Child[] };
   /** @see {@link jsx} */
   export type IntrinsicElements = {
     [K in keyof GenericElementMap]: ElementProps<GenericElementMap[K]> & ContainsChildren;
