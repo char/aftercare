@@ -4,13 +4,13 @@ const startTime = new Signal(0);
 const elapsed = new Signal(0);
 const running = new Signal(false);
 
+const twoDigit = (n: number) => String(n).padStart(2, "0");
 const formatTime = (ms: number): string => {
   const totalSeconds = Math.floor(ms / 1000);
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
   const milliseconds = Math.floor((ms % 1000) / 10);
-
-  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}.${String(milliseconds).padStart(2, "0")}`;
+  return `${twoDigit(minutes)}:${twoDigit(seconds)}.${twoDigit(milliseconds)}`;
 };
 
 let interval: number;
