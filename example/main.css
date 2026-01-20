@@ -1,0 +1,65 @@
+:root {
+  font-family: -apple-system, "Segoe UI", Helvetica, Roboto, Cantarell, Arial, sans-serif;
+}
+
+main {
+  max-width: 400px;
+  margin: 4em auto;
+  text-align: center;
+  padding: 2rem;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  margin-bottom: 1rem;
+}
+
+.time-display {
+  font-size: 4rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.15s ease;
+
+  background-color: #0066cc;
+  &:hover {
+    background-color: #0052a3;
+  }
+
+  &:disabled {
+    background-color: #ccc !important;
+    cursor: not-allowed;
+  }
+
+  &.reset {
+    background-color: #dc3545;
+    &:hover {
+      background-color: #c82333;
+    }
+  }
+
+  &.stop {
+    background-color: #f0ad4e;
+    &:hover {
+      background-color: #ec971f;
+    }
+  }
+}

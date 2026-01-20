@@ -2,54 +2,51 @@
 
 makes the dom nicer
 
-a microframework for client-side frontend development
+a microframework for client-side frontend development. around 3kb minified
 
 ## features
 
-- deno/esbuild build system
+- deno-based
+- turnkey esbuild bundling system
 - reactive signals
 - strongly-typed element creation helpers
 - jsx runtime
-- monadic result wrapper for functions that throw
 
 ## example
 
 ```tsx
-// src/main.tsx
+// main.tsx
 
 // esbuild resolves + bundles jsr/npm/https imports:
 import { assertEquals } from "jsr:@std/assert";
 assertEquals(2, 1 + 1);
 
-// Signals have reactive behavior (set(..) calls all subscribe(..) listeners)
-import { Signal } from "jsr:@char/aftercare@0.3.0";
+import { Signal } from "@char/aftercare";
 
-const counter = new Signal(0);
-const increment = () => counter.value++;
-const decrement = () => counter.value--;
-const showCounter = (span: HTMLElement) =>
-  counter.subscribeImmediate(value => (span.innerText = value + ""));
-
+const count = new Signal(0);
+const counter = (
+  <div style={{ display: "flex", gap: "1em", marginBottom: "1em" }}>
+    <button type="button" _onclick={() => count.mut(n => n - 1)} innerText="-" />
+    Clicked {count.str()} times!
+    <button type="button" _onclick={() => count.mut(n => n + 1)} innerText="+" />
+  </div>
+);
+document.body.append(counter);
 document.body.append(
-  <div>
-    <button _onclick={decrement}>-</button>
-    <span _tap={showCounter} />
-    <button _onclick={increment}>+</button>
-  </div>,
+  <button type="button" _onclick={() => count.set(0)}>
+    Reset
+  </button>,
 );
 ```
 
 ```html
-<!doctype html>
-<!-- web/index.html -->
+<!DOCTYPE html>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-<script type="module" src="/dist/main.js"></script>
+<!-- index.html -->
+<script src="./dist/main.js" type="module"></script>
 ```
 
-build like so:
-
 ```shell
-$ deno run -A jsr:@char/aftercare/esbuild --in src/main.tsx
+$ deno run -A jsr:@char/aftercare/bundle -i ./main.tsx -o ./dist --watch --serve .
 ```

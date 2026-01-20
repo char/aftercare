@@ -1,11 +1,14 @@
 {
   "name": "@char/aftercare",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "license": "WTFPL",
+  "tasks": {
+    "build-example": "deno run -A ./lib/bundle.ts -i ./example/main.tsx -o ./example/dist"
+  },
   "exports": {
-    ".": "./src/mod.ts",
-    "./esbuild": "./src/esbuild/mod.ts",
-    "./jsx-runtime": "./src/jsx.ts"
+    ".": "./lib/mod.ts",
+    "./bundle": "./lib/bundle.ts",
+    "./jsx-runtime": "./lib/jsx.ts"
   },
   "compilerOptions": {
     "lib": ["deno.window", "dom"],
@@ -13,6 +16,12 @@
     "jsxImportSource": "@char/aftercare"
   },
   "publish": {
-    "exclude": ["example/", ".editorconfig", ".prettierrc"]
-  }
+    "include": ["lib/", "README.md"]
+  },
+  "lint": {
+    "rules": {
+      "exclude": ["ban-types", "no-explicit-any", "no-import-prefix"]
+    }
+  },
+  "lock": false
 }
