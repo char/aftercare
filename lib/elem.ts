@@ -46,7 +46,7 @@ type DirectElementProps<E extends GenericElement> = {
 };
 type AuxElementProps<E extends GenericElement> = {
   class?: Signalable<string>;
-  classList?: string[];
+  classList?: (string | undefined)[];
   style?: CSSDeclaration;
   dataset?: Record<string, Signalable<string>>;
   _innerHTML?: Signalable<string>;
@@ -147,7 +147,10 @@ export function elem<const Tag extends TagName | `${string}-${string}`>(
         break;
       }
       case "classList": {
-        element.classList.add(...value);
+        for (const v of value) {
+          if (v === undefined) continue;
+          element.classList.add(v);
+        }
         break;
       }
       case "dataset": {
