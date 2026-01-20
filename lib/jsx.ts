@@ -28,10 +28,20 @@ namespace JSX {
   /** @see {@link jsx} */
   export type Child = Node | Node[] | string | SignalLike<string>;
   type ContainsChildren = { children?: JSX.Child | JSX.Child[] };
+
+  type _HTMLMap = HTMLElementTagNameMap;
+  type HTMLElements = {
+    [K in keyof _HTMLMap]: ElementProps<_HTMLMap[K]> & ContainsChildren;
+  };
+  type CustomHTMLElements = {
+    [K: `${string}-${string}`]: ElementProps<GenericElement> & ContainsChildren;
+  };
+  type SVGElements = {
+    // to avoid footguns, we only support void svgs (use an _outerHTML parameter)
+    svg: ElementProps<SVGSVGElement> & { children?: [] };
+  };
   /** @see {@link jsx} */
-  export type IntrinsicElements = {
-    [K in keyof GenericElementMap]: ElementProps<GenericElementMap[K]> & ContainsChildren;
-  } & { [K: `${string}-${string}`]: ElementProps<GenericElement> & ContainsChildren };
+  export type IntrinsicElements = HTMLElements & CustomHTMLElements & SVGElements;
 }
 
 /** fragments are not supported - this function throws if called */

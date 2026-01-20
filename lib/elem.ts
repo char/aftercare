@@ -1,5 +1,4 @@
 import type * as CSS from "npm:csstype@3.2.3";
-import { SVG_TAG_LIST } from "./$svg-tags.gen.ts";
 import { Signal, type SignalLike } from "./signal.ts";
 
 // prettier-ignore
@@ -66,22 +65,13 @@ export type ElementProps<E extends GenericElement> =
   AuxElementProps<E> &
   ElementEvents<E>;
 
-// we don't want the ones that overlap with HTML
-type DisjointSVGElementMap = {
-  [K in keyof SVGElementTagNameMap as K extends keyof HTMLElementTagNameMap
-    ? never
-    : K]: SVGElementTagNameMap[K];
-};
-// needs to stay declared for codegen!!
-type _SVGTags = keyof DisjointSVGElementMap;
-
 /**
  * a type to map from a tag name to a {@link GenericElement}.
  *
  * this type merges the standard DOM maps, while excluding SVG tags that overlap with HTML tags
  * (e.g., 'a', 'button', 'div').
  */
-export type GenericElementMap = HTMLElementTagNameMap & DisjointSVGElementMap;
+export type GenericElementMap = HTMLElementTagNameMap & { svg: SVGSVGElement };
 
 /**
  * a union type of all valid HTML and SVG element tag names supported by {@link elem}.
@@ -120,7 +110,7 @@ export function elem<const Tag extends TagName | `${string}-${string}`>(
   children: (Node | string | Signal<string>)[] = [],
 ): ElementType<Tag> {
   const element = (
-    SVG_TAG_LIST.includes(tag)
+    tag === "svg"
       ? document.createElementNS("http://www.w3.org/2000/svg", tag)
       : document.createElement(tag)
   ) as ElementType<Tag>;
