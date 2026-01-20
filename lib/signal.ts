@@ -107,6 +107,12 @@ export class Signal<T> {
     };
   }
 
+  /** syntactic sugar - adds a subscription and immediately notifies it with the current value */
+  subscribeImmediate(listener: (curr: T, old: T) => void): { unsubscribe: () => void } {
+    listener(this.get(), this.get());
+    return this.subscribe(listener);
+  }
+
   /**
    * subscribe to signal changes using a weak reference to an object
    *
