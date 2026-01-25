@@ -6,9 +6,9 @@
  */
 import {
   elem,
+  elemChildConversion,
   type ElementProps,
   type GenericElement,
-  type GenericElementMap,
   type TagName,
 } from "./elem.ts";
 import type { SignalLike } from "./signal.ts";
@@ -24,6 +24,13 @@ type DOMElement = Element; // Element is shadowed in the JSX namespace later
 namespace JSX {
   /** @see {@link jsx} */
   export type Element = GenericElement;
+  /**
+   * @see {@link jsx}.
+   *
+   * NOTE: does not currently affect typechecking unless you use the
+   * {@link https://github.com/char/TypeScript|char/TypeScript} fork of `tsc`.
+   */
+  export type Fragment = Node[];
 
   /** @see {@link jsx} */
   export type Child = Node | Node[] | string | SignalLike<string>;
@@ -44,9 +51,14 @@ namespace JSX {
   export type IntrinsicElements = HTMLElements & CustomHTMLElements & SVGElements;
 }
 
-/** fragments are not supported - this function throws if called */
-function Fragment(_props: Record<string, unknown>, _key?: string): never {
-  throw new Error("fragments are not supported!");
+/** render a fragment */
+function Fragment(props: { children?: JSX.Child | JSX.Child[] }, _key?: string): Node[] {
+  const children = props.children
+    ? Array.isArray(props.children)
+      ? props.children
+      : [props.children]
+    : [];
+  return children.flatMap(c => elemChildConversion(c));
 }
 
 /**

@@ -94,6 +94,24 @@ export type TagName = keyof GenericElementMap;
 export type ElementType<T extends TagName | `${string}-${string}`> =
   T extends keyof GenericElementMap ? GenericElementMap[T] : GenericElement;
 
+/** any type that can be a child in the parameters to {@link elem} */
+export type ElementChild = Node | Node[] | string | Signal<string>;
+/** helper function to convert an {@link ElementChild} into something that can be `append(..)`ed */
+export const elemChildConversion = (child: ElementChild): Node[] => {
+  if (typeof child === "string") {
+    return [document.createTextNode(child)];
+  }
+  if (child instanceof Signal) {
+    const node = document.createTextNode(child.get());
+    child.weakSubscribe(new WeakRef(node), (node, v) => (node.textContent = v));
+    return [node];
+  }
+  if (Array.isArray(child)) {
+    return child.flatMap(c => elemChildConversion(c));
+  }
+  return [child];
+};
+
 /**
  * create a DOM element with the specified tag, attributes, and children.
  *
@@ -116,7 +134,7 @@ export type ElementType<T extends TagName | `${string}-${string}`> =
 export function elem<const Tag extends TagName | `${string}-${string}`>(
   tag: Tag,
   props: ElementProps<ElementType<Tag>> = {},
-  children: (Node | string | Signal<string>)[] = [],
+  children: ElementChild[] = [],
 ): ElementType<Tag> {
   const element = (
     tag === "svg"
@@ -199,17 +217,7 @@ export function elem<const Tag extends TagName | `${string}-${string}`>(
   if (props._innerHTML !== undefined) setValue(element, "innerHTML", props._innerHTML);
   if (props._outerHTML !== undefined) setValue(element, "outerHTML", props._innerHTML);
 
-  for (const child of children) {
-    if (typeof child === "string") {
-      element.append(document.createTextNode(child));
-    } else if (child instanceof Signal) {
-      const node = document.createTextNode(child.get());
-      child.weakSubscribe(new WeakRef(node), (node, v) => (node.textContent = v));
-      element.append(node);
-    } else {
-      element.append(child);
-    }
-  }
+  element.append(...children.flatMap(elemChildConversion));
 
   for (const k of Object.keys(props)) {
     if (!k.startsWith("_on")) continue;
