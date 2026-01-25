@@ -38,7 +38,7 @@ type CSSDeclaration =
 type DirectElementProps<E extends GenericElement> = {
   [K in WritableKeysOf<E> as K extends string
       ? K extends `_${string}` ? never
-      : K extends ("style" | "classList" | "dataset" | "innerHTML" | "outerHTML") ? never
+      : K extends ("style" | "classList" | "dataset" | "innerHTML" | "outerHTML" | "checked" | "value" | "valueAsNumber") ? never
       : NonNullable<E[K]> extends Function ? never
       : K
     : never]?: Signalable<E[K]>;
@@ -51,7 +51,14 @@ type AuxElementProps<E extends GenericElement> = {
   _innerHTML?: Signalable<string>;
   _outerHTML?: Signalable<string>;
   _also?: (element: E) => void;
-};
+} & AuxInputElementProps<E>;
+type AuxInputElementProps<E extends GenericElement> = E extends HTMLInputElement
+  ? {
+      checked?: Signalable<boolean>;
+      value?: Signalable<string>;
+      valueAsNumber?: Signalable<number>;
+    }
+  : {};
 type ElementEvents<E extends GenericElement> = {
   [K in keyof HTMLElementEventMap as K extends string ? `_on${K}` : never]?: (
     this: E,
@@ -149,6 +156,36 @@ export function elem<const Tag extends TagName | `${string}-${string}`>(
       }
       case "class": {
         setValue(element, "className", value);
+        break;
+      }
+      case "checked":
+      case "valueAsNumber":
+      case "value": {
+        console.log({ element, prop, value });
+        if (element instanceof HTMLInputElement) {
+          if (value instanceof Signal) {
+            let skip = false;
+            value.weakSubscribe(new WeakRef(element), (e, v) => {
+              if (skip) return;
+              // @ts-expect-error can't specify generic here
+              e[prop] = v;
+            });
+            element.addEventListener("input", () => {
+              try {
+                skip = true;
+                value.set(element[prop]);
+              } finally {
+                skip = false;
+              }
+            });
+            // @ts-expect-error can't specify generic
+            element[prop] = value.get();
+          } else {
+            setValue(element, prop, value);
+          }
+        } else {
+          setValue(element, prop, value);
+        }
         break;
       }
       default: {
