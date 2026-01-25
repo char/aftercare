@@ -1,5 +1,7 @@
 import type * as CSS from "npm:csstype@3.2.3";
 import { Signal, type SignalLike } from "./signal.ts";
+// @ts-types="@char/aftercare"
+import { effect } from "@char/aftercare";
 
 // prettier-ignore
 type Eq<A, B> =
@@ -173,7 +175,7 @@ export function elem<const Tag extends TagName | `${string}-${string}`>(
             element.addEventListener("input", () => {
               try {
                 skip = true;
-                value.set(element[prop]);
+                effect(() => value.set(element[prop]));
               } finally {
                 skip = false;
               }
