@@ -13,8 +13,6 @@ import {
 } from "./elem.ts";
 import type { SignalLike } from "./signal.ts";
 
-type DOMElement = Element; // Element is shadowed in the JSX namespace later
-
 /**
  * JSX namespace as required by `react-jsx` strategy
  *

@@ -100,14 +100,15 @@ if (import.meta.main) {
   });
 
   const createServeInfo = (bind: string) => {
-    let hostAndPort: { host: string; port: number };
-    if (bind.indexOf(":") === -1) {
-      hostAndPort = { host: "127.0.0.1", port: parseInt(bind) };
-    } else {
-      const [host, port] = bind.split(":");
-      hostAndPort = { host, port: parseInt(port) };
-    }
-    return { ...hostAndPort, servedir: args.serve, fallback: args.serve + "/index.html" };
+    const parts = bind.split(":");
+    const [host, port] = parts.length > 1 ? parts : ["127.0.0.1", parts[0]];
+
+    return {
+      host,
+      port: Number(port),
+      servedir: args.serve,
+      fallback: args.serve + "/index.html",
+    };
   };
   const serve = args.serve ? createServeInfo(args.bind) : undefined;
 

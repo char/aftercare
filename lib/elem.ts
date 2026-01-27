@@ -1,7 +1,5 @@
 import type * as CSS from "npm:csstype@3.2.3";
-import { Signal, type SignalLike } from "./signal.ts";
-// @ts-types="@char/aftercare"
-import { effect } from "@char/aftercare";
+import { effect, Signal, type SignalLike } from "./signal.ts";
 
 // prettier-ignore
 type Eq<A, B> =
@@ -181,7 +179,6 @@ export function elem<const Tag extends TagName | `${string}-${string}`>(
       case "checked":
       case "valueAsNumber":
       case "value": {
-        console.log({ element, prop, value });
         if (element instanceof HTMLInputElement) {
           if (value instanceof Signal) {
             let skip = false;
@@ -215,7 +212,7 @@ export function elem<const Tag extends TagName | `${string}-${string}`>(
   }
 
   if (props._innerHTML !== undefined) setValue(element, "innerHTML", props._innerHTML);
-  if (props._outerHTML !== undefined) setValue(element, "outerHTML", props._innerHTML);
+  if (props._outerHTML !== undefined) setValue(element, "outerHTML", props._outerHTML);
 
   element.append(...children.flatMap(elemChildConversion));
 
