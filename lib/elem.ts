@@ -206,7 +206,16 @@ export function elem<const Tag extends TagName | `${string}-${string}`>(
         break;
       }
       default: {
-        setValue(element, prop, value);
+        if (prop.includes("-")) {
+          if (value instanceof Signal) {
+            value.weakSubscribe(new WeakRef(element), (e, v) => e.setAttribute(prop, v));
+            element.setAttribute(prop, value.get());
+          } else {
+            element.setAttribute(prop, value);
+          }
+        } else {
+          setValue(element, prop, value);
+        }
       }
     }
   }
