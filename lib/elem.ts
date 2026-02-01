@@ -180,12 +180,15 @@ export function elem<const Tag extends TagName | `${string}-${string}`>(
       case "valueAsNumber":
       case "value": {
         if (element instanceof HTMLInputElement) {
+          const prop_ = prop === "valueAsNumber" ? "value" : prop;
           if (value instanceof Signal) {
+            const value_ = prop === "valueAsNumber" ? value.str() : value;
+
             let skip = false;
-            value.weakSubscribe(new WeakRef(element), (e, v) => {
+            value_.weakSubscribe(new WeakRef(element), (e, v) => {
               if (skip) return;
               // @ts-expect-error can't specify generic here
-              e[prop] = v;
+              e[prop_] = v;
             });
             element.addEventListener("input", () => {
               try {
@@ -196,9 +199,10 @@ export function elem<const Tag extends TagName | `${string}-${string}`>(
               }
             });
             // @ts-expect-error can't specify generic
-            element[prop] = value.get();
+            element[prop_] = value_.get();
           } else {
-            setValue(element, prop, value);
+            const value_ = prop === "valueAsNumber" ? String(value) : value;
+            setValue(element, prop_, value_);
           }
         } else {
           setValue(element, prop, value);
