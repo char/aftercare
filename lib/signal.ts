@@ -153,13 +153,13 @@ export class Signal<T> {
    * console.log(text.get());    // "Count is 10"
    * ```
    */
-  derive<T_>(transform: (v: T) => T_): Signal<T_> {
-    return new DerivedSignal(this, transform);
+  derive<T_>(transform: (v: T) => T_, inverse?: (v: T_) => T): Signal<T_> {
+    return new DerivedSignal(this, transform, inverse);
   }
 
   /** helper method (equiv. `.derive(String)`) */
-  str(): Signal<string> {
-    return this.derive(String);
+  str(inverse?: (v: string) => T): Signal<string> {
+    return this.derive(String, inverse);
   }
 }
 
@@ -197,13 +197,21 @@ export class DerivedSignal<A, B> extends Signal<A> {
   constructor(
     public parent: Signal<B>,
     public transform: (v: B) => A,
+    public inverse?: (v: A) => B,
   ) {
     super(transform(parent.get()));
-    parent[derived].push(() => this.set(transform(parent.get())));
+    parent[derived].push(() => super.set(transform(parent.get())));
   }
 
   override derive<T_>(transform: (v: A) => T_): Signal<T_> {
     return this.parent.derive(v => transform(this.transform(v)));
+  }
+
+  override set(value: A) {
+    if (!this.inverse)
+      throw new Error("can't set(..) a DerivedSignal with no inverse transform!");
+    super.set(value);
+    this.parent.set(this.inverse(value));
   }
 }
 

@@ -56,7 +56,6 @@ type AuxInputElementProps<E extends GenericElement> = E extends HTMLInputElement
   ? {
       checked?: Signalable<boolean>;
       value?: Signalable<string>;
-      valueAsNumber?: Signalable<number>;
     }
   : {};
 type ElementEvents<E extends GenericElement> = {
@@ -177,18 +176,14 @@ export function elem<const Tag extends TagName | `${string}-${string}`>(
         break;
       }
       case "checked":
-      case "valueAsNumber":
       case "value": {
         if (element instanceof HTMLInputElement) {
-          const prop_ = prop === "valueAsNumber" ? "value" : prop;
           if (value instanceof Signal) {
-            const value_ = prop === "valueAsNumber" ? value.str() : value;
-
             let skip = false;
-            value_.weakSubscribe(new WeakRef(element), (e, v) => {
+            value.weakSubscribe(new WeakRef(element), (e, v) => {
               if (skip) return;
               // @ts-expect-error can't specify generic here
-              e[prop_] = v;
+              e[prop] = v;
             });
             element.addEventListener("input", () => {
               try {
@@ -199,10 +194,9 @@ export function elem<const Tag extends TagName | `${string}-${string}`>(
               }
             });
             // @ts-expect-error can't specify generic
-            element[prop_] = value_.get();
+            element[prop] = value.get();
           } else {
-            const value_ = prop === "valueAsNumber" ? String(value) : value;
-            setValue(element, prop_, value_);
+            setValue(element, prop, value);
           }
         } else {
           setValue(element, prop, value);
