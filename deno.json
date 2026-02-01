@@ -22,6 +22,5 @@
     "rules": {
       "exclude": ["ban-types", "no-explicit-any", "no-import-prefix"]
     }
-  },
-  "lock": false
+  }
 }
