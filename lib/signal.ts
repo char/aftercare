@@ -77,9 +77,9 @@ export class Signal<T> {
    * you should not need to call this method manually, since it's automatically called upon
    * completion of an effect for all dirty signals.
    */
-  notify(): void {
-    if (this.#old === undefined) return;
-    for (const sub of this.#subscriptions) sub(this.#v, this.#old);
+  notify(force?: boolean): void {
+    if (this.#old === undefined && !force) return;
+    for (const sub of this.#subscriptions) sub(this.#v, this.#old ?? this.#v);
     this.#old = undefined;
   }
 
