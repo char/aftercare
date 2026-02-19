@@ -1,6 +1,6 @@
 {
   "name": "@char/aftercare",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "license": "WTFPL",
   "tasks": {
     "build-example": "deno run -A ./lib/bundle.ts -i ./example/main.tsx -o ./example/dist"
@@ -8,7 +8,8 @@
   "exports": {
     ".": "./lib/mod.ts",
     "./bundle": "./lib/bundle.ts",
-    "./jsx-runtime": "./lib/jsx.ts"
+    "./jsx-runtime": "./lib/jsx.ts",
+    "./jsx-dev-runtime": "./lib/jsx.ts"
   },
   "compilerOptions": {
     "lib": ["deno.window", "dom"],
