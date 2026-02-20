@@ -43,6 +43,7 @@ type DirectElementProps<E extends GenericElement> = {
       : K
     : never]?: Signalable<E[K]>;
 };
+// prettier-ignore
 type AuxElementProps<E extends GenericElement> = {
   class?: Signalable<string>;
   classList?: (string | undefined)[];
@@ -51,12 +52,12 @@ type AuxElementProps<E extends GenericElement> = {
   _innerHTML?: Signalable<string>;
   _outerHTML?: Signalable<string>;
   _also?: (element: E) => void;
-} & AuxInputElementProps<E>;
+} & AuxInputElementProps<E> & AuxValueProp<E>;
 type AuxInputElementProps<E extends GenericElement> = E extends HTMLInputElement
-  ? {
-      checked?: Signalable<boolean>;
-      value?: Signalable<string>;
-    }
+  ? { checked?: Signalable<boolean> }
+  : {};
+type AuxValueProp<E extends GenericElement> = E extends { value: string }
+  ? { value?: Signalable<string> }
   : {};
 type ElementEvents<E extends GenericElement> = {
   [K in keyof HTMLElementEventMap as K extends string ? `_on${K}` : never]?: (
