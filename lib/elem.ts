@@ -176,32 +176,49 @@ export function elem<const Tag extends TagName | `${string}-${string}`>(
         setValue(element, "className", value);
         break;
       }
-      case "checked":
+      case "checked": {
+        if (element instanceof HTMLInputElement && value instanceof Signal) {
+          let skip = false;
+          value.weakSubscribe(new WeakRef(element), (e, v) => {
+            if (skip) return;
+            e[prop] = v;
+          });
+          element.addEventListener("change", () => {
+            try {
+              skip = true;
+              effect(() => value.set(element.checked));
+            } finally {
+              skip = false;
+            }
+          });
+          element.checked = value.get();
+          break;
+        }
+
+        setValue(element, prop, value);
+        break;
+      }
       case "value": {
-        if (element instanceof HTMLInputElement) {
+        if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
           if (value instanceof Signal) {
             let skip = false;
             value.weakSubscribe(new WeakRef(element), (e, v) => {
               if (skip) return;
-              // @ts-expect-error can't specify generic here
-              e[prop] = v;
+              e.value = v;
             });
             element.addEventListener("input", () => {
               try {
                 skip = true;
-                effect(() => value.set(element[prop]));
+                effect(() => value.set(element.value));
               } finally {
                 skip = false;
               }
             });
-            // @ts-expect-error can't specify generic
-            element[prop] = value.get();
-          } else {
-            setValue(element, prop, value);
+            element.value = value.get();
+            break;
           }
-        } else {
-          setValue(element, prop, value);
         }
+        setValue(element, prop, value);
         break;
       }
       default: {
