@@ -143,6 +143,8 @@ export function elem<const Tag extends TagName | `${string}-${string}`>(
   for (const prop of Object.keys(props)) {
     if (prop.startsWith("_")) continue;
     const value = (props as any)[prop];
+    if (value === undefined) continue;
+
     switch (prop) {
       case "style": {
         for (const [k, v] of Object.entries(value)) {
