@@ -93,7 +93,7 @@ export type ElementType<T extends TagName | `${string}-${string}`> =
   T extends keyof GenericElementMap ? GenericElementMap[T] : GenericElement;
 
 /** any type that can be a child in the parameters to {@link elem} */
-export type ElementChild = Node | Node[] | string | Signal<string>;
+export type ElementChild = Node | Node[] | string | Signal<string> | undefined;
 /** helper function to convert an {@link ElementChild} into something that can be `append(..)`ed */
 export const elemChildConversion = (child: ElementChild): Node[] => {
   if (child === undefined) return [];

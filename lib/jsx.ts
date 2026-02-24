@@ -7,11 +7,11 @@
 import {
   elem,
   elemChildConversion,
+  type ElementChild,
   type ElementProps,
   type GenericElement,
   type TagName,
 } from "./elem.ts";
-import type { SignalLike } from "./signal.ts";
 
 /**
  * JSX namespace as required by `react-jsx` strategy
@@ -31,7 +31,7 @@ namespace JSX {
   export type Fragment = Node[];
 
   /** @see {@link jsx} */
-  export type Child = Node | Node[] | string | SignalLike<string>;
+  export type Child = ElementChild;
   type ContainsChildren = { children?: JSX.Child | JSX.Child[] };
 
   type _HTMLMap = HTMLElementTagNameMap;
