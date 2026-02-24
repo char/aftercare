@@ -96,6 +96,7 @@ export type ElementType<T extends TagName | `${string}-${string}`> =
 export type ElementChild = Node | Node[] | string | Signal<string>;
 /** helper function to convert an {@link ElementChild} into something that can be `append(..)`ed */
 export const elemChildConversion = (child: ElementChild): Node[] => {
+  if (child === undefined) return [];
   if (typeof child === "string") {
     return [document.createTextNode(child)];
   }
