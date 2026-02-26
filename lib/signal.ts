@@ -203,8 +203,13 @@ export class DerivedSignal<A, B> extends Signal<A> {
     parent[derived].push(() => super.set(transform(parent.get())));
   }
 
-  override derive<T_>(transform: (v: A) => T_): Signal<T_> {
-    return this.parent.derive(v => transform(this.transform(v)));
+  override derive<T_>(transform: (v: A) => T_, inverse?: (v: T_) => A): Signal<T_> {
+    const tf: (v: B) => T_ = v => transform(this.transform(v));
+    if (this.inverse && inverse) {
+      const inv: (v: T_) => B = v => this.inverse!(inverse!(v));
+      return this.parent.derive(tf, inv);
+    }
+    return this.parent.derive(tf);
   }
 
   override set(value: A) {
