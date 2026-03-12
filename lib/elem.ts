@@ -38,7 +38,7 @@ type CSSDeclaration =
 type DirectElementProps<E extends GenericElement> = {
   [K in WritableKeysOf<E> as K extends string
       ? K extends `_${string}` ? never
-      : K extends ("style" | "classList" | "dataset" | "innerHTML" | "outerHTML" | "checked" | "value" | "valueAsNumber") ? never
+      : K extends ("style" | "classList" | "dataset" | "innerHTML" | "outerHTML" | "checked" | "value" | "valueAsNumber" | "list") ? never
       : NonNullable<E[K]> extends Function ? never
       : K
     : never]?: Signalable<E[K]>;
@@ -54,7 +54,7 @@ type AuxElementProps<E extends GenericElement> = {
   _also?: (element: E) => void;
 } & AuxInputElementProps<E> & AuxValueProp<E>;
 type AuxInputElementProps<E extends GenericElement> = E extends HTMLInputElement
-  ? { checked?: Signalable<boolean> }
+  ? { checked?: Signalable<boolean>; list?: Signalable<string> }
   : {};
 type AuxValueProp<E extends GenericElement> = E extends { value: string }
   ? { value?: Signalable<string> }
@@ -222,6 +222,15 @@ export function elem<const Tag extends TagName | `${string}-${string}`>(
           }
         }
         setValue(element, prop, value);
+        break;
+      }
+      case "list": {
+        if (value instanceof Signal) {
+          value.weakSubscribe(new WeakRef(element), (e, v) => e.setAttribute("list", v));
+          element.setAttribute("list", value.get());
+        } else {
+          element.setAttribute("list", value);
+        }
         break;
       }
       default: {
