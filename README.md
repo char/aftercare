@@ -7,7 +7,7 @@ a microframework for client-side frontend development. around 3kb minified
 ## features
 
 - deno-based
-- turnkey esbuild bundling system
+- vite integration
 - reactive signals
 - strongly-typed element creation helpers
 - jsx runtime
@@ -17,7 +17,6 @@ a microframework for client-side frontend development. around 3kb minified
 ```tsx
 // main.tsx
 
-// esbuild resolves + bundles jsr/npm/https imports:
 import { assertEquals } from "jsr:@std/assert";
 assertEquals(2, 1 + 1);
 
@@ -44,9 +43,7 @@ document.body.append(
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <!-- index.html -->
-<script src="./dist/main.js" type="module"></script>
+<script src="./main.tsx" type="module"></script>
 ```
 
-```shell
-$ deno run -A jsr:@char/aftercare/bundle -i ./main.tsx -o ./dist --watch --serve .
-```
+build `index.html` with vite :)

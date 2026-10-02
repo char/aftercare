@@ -1,13 +1,13 @@
 {
   "name": "@char/aftercare",
-  "version": "0.6.9",
+  "version": "0.7.0",
   "license": "WTFPL",
   "tasks": {
-    "build-example": "deno run -A ./lib/bundle.ts -i ./example/main.tsx -o ./example/dist"
+    "build-example": "deno run -A npm:vite@^8.3.1 build example --configLoader native"
   },
   "exports": {
     ".": "./lib/mod.ts",
-    "./bundle": "./lib/bundle.ts",
+    "./vite": "./lib/vite.ts",
     "./jsx-runtime": "./lib/jsx.ts",
     "./jsx-dev-runtime": "./lib/jsx.ts"
   },

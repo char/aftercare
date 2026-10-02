@@ -13,7 +13,7 @@ const formatTime = (ms: number): string => {
   return `${twoDigit(minutes)}:${twoDigit(seconds)}.${twoDigit(milliseconds)}`;
 };
 
-let interval: number;
+let interval: ReturnType<typeof setInterval>;
 running.subscribe(r => {
   if (r) {
     startTime.set(Date.now() - elapsed.get());
@@ -35,7 +35,7 @@ const stopwatch = (
         class={running.derive(r => (r ? "stop" : "start"))}
         _onclick={() => running.mut(b => !b)}
       >
-        {running.derive(running => (running ? "Stop" : "Start"))}
+        {running.derive<string>(running => (running ? "Stop" : "Start"))}
       </button>
       <button type="button" class="reset" _onclick={() => elapsed.set(0)} disabled={running}>
         Reset
