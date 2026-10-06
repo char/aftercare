@@ -87,5 +87,27 @@ function jsx<T extends TagName | ((props: Record<string, unknown>) => JSX.Elemen
   return (elem as any)(tag, attrs, childrenArray);
 }
 
-export { Fragment, jsx, jsx as jsxDEV, jsx as jsxs };
+declare const __AFTERCARE_ROOT__: string | undefined;
+function jsxDEV<T extends TagName | ((props: Record<string, unknown>) => JSX.Element)>(
+  tag: T,
+  props: Record<string, unknown>,
+  _key: string | undefined,
+  _isStaticChildren: boolean,
+  source: {
+    readonly lineNumber: number;
+    readonly columnNumber: number;
+    readonly fileName: string;
+  },
+): JSX.Element {
+  if (__AFTERCARE_ROOT__) {
+    const path = source.fileName.startsWith(__AFTERCARE_ROOT__)
+      ? source.fileName.slice(__AFTERCARE_ROOT__.length)
+      : source.fileName;
+    props["data-aftercare-src"] = `${path}:${source.lineNumber}:${source.columnNumber}`;
+  }
+
+  return jsx(tag, props, _key);
+}
+
+export { Fragment, jsx, jsxDEV, jsx as jsxs };
 export type { JSX };
